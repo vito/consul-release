@@ -19,11 +19,23 @@ resource_pools:
       name: random
 
 jobs:
-  - name: server
-    instances: 3
+  - name: server_z1
+    instances: 1
     networks:
       - name: consul
         static_ips: (( static_ips(0, 1, 2) ))
+
+  - name: server_z2
+    instances: 1
+    networks:
+      - name: consul
+        static_ips: (( static_ips(16, 17, 18) ))
+
+  - name: server_z3
+    instances: 1
+    networks:
+      - name: consul
+        static_ips: (( static_ips(32, 33, 34) ))
 
 networks:
 - name: consul

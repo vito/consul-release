@@ -7,6 +7,10 @@ CONF_DIR=/var/vcap/jobs/consul-agent/config
 
 PKG=/var/vcap/packages/consul-agent
 
+mkdir -p /var/vcap/sys/log/monit
+exec 1>> /var/vcap/sys/log/monit/consul-agent.out.log
+exec 2>> /var/vcap/sys/log/monit/consul-agent.err.log
+
 case $1 in
   start)
     mkdir -p $LOG_DIR
@@ -30,6 +34,7 @@ case $1 in
       -config-file=$CONF_DIR/config.json \
       1>>$LOG_DIR/consul-agent.stdout.log \
       2>>$LOG_DIR/consul-agent.stderr.log
+
     ;;
 
   stop)
@@ -37,6 +42,6 @@ case $1 in
     ;;
 
   *)
-    echo "Usage: ctl {start|stop}"
+    echo "Usage: $0 {start|stop}"
     ;;
 esac

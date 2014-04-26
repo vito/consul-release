@@ -2,7 +2,8 @@
 name: consul-agent
 
 templates:
-  ctl.sh: bin/ctl
+  agent_ctl.sh: bin/agent_ctl
+  join_ctl.sh.erb: bin/join_ctl
   config.json.erb: config/config.json
 
 packages:
@@ -16,8 +17,12 @@ properties:
     description: "Mode to run the agent in. (client or server)"
     default: client
 
-  consul.agent.servers:
-    description: "Server addresses to join on start."
+  consul.agent.servers.lan:
+    description: "LAN server addresses to join on start."
+    default: []
+
+  consul.agent.servers.wan:
+    description: "WAN server addresses to join."
     default: []
 
   consul.agent.log_level:

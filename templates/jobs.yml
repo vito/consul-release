@@ -1,22 +1,74 @@
 networks: (( merge ))
 
 jobs:
-  - name: server
+  - name: server_z1
     templates:
       - name: consul-agent
         release: consul
-    instances: 3
+    instances: 1
     resource_pool: consul
     persistent_disk: 1024
     networks:
       - name: consul
         static_ips: (( merge ))
+    update:
+      serial: true
+      max_in_flight: 1
     properties:
       network_name: consul
       consul:
         agent:
           mode: server
-          servers: (( networks.consul.static_ips ))
+          servers:
+            lan: (( networks.consul.static_ips ))
+            wan: (( jobs.server_z2.networks.consul.static_ips jobs.server_z3.networks.consul.static_ips ))
+          datacenter: dc1
+
+  - name: server_z2
+    templates:
+      - name: consul-agent
+        release: consul
+    instances: 1
+    resource_pool: consul
+    persistent_disk: 1024
+    networks:
+      - name: consul
+        static_ips: (( merge ))
+    update:
+      serial: true
+      max_in_flight: 1
+    properties:
+      network_name: consul
+      consul:
+        agent:
+          mode: server
+          servers:
+            lan: (( networks.consul.static_ips ))
+            wan: (( jobs.server_z1.networks.consul.static_ips jobs.server_z3.networks.consul.static_ips ))
+          datacenter: dc2
+
+  - name: server_z3
+    templates:
+      - name: consul-agent
+        release: consul
+    instances: 1
+    resource_pool: consul
+    persistent_disk: 1024
+    networks:
+      - name: consul
+        static_ips: (( merge ))
+    update:
+      serial: true
+      max_in_flight: 1
+    properties:
+      network_name: consul
+      consul:
+        agent:
+          mode: server
+          servers:
+            lan: (( networks.consul.static_ips ))
+            wan: (( jobs.server_z1.networks.consul.static_ips jobs.server_z2.networks.consul.static_ips ))
+          datacenter: dc3
 
   - name: client
     templates:
@@ -30,4 +82,6 @@ jobs:
       network_name: consul
       consul:
         agent:
-          servers: (( jobs.server.networks.consul.static_ips ))
+          servers:
+            lan: (( jobs.server_z1.networks.consul.static_ips ))
+          datacenter: dc1

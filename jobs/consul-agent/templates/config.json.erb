@@ -2,7 +2,7 @@
   my_ip = spec.networks.send(p("network_name")).ip
 
   server = p("consul.agent.mode") == "server"
-  servers = p("consul.agent.servers")
+  lan_servers = p("consul.agent.servers.lan")
 
   config = {
     "datacenter" => p("consul.agent.datacenter"),
@@ -15,10 +15,10 @@
     },
   }
 
-  if server && servers.first == my_ip
+  if server && lan_servers.first == my_ip
     config["bootstrap"] = true
   else
-    config["start_join"] = servers
+    config["start_join"] = lan_servers
   end
 
   config.to_json
