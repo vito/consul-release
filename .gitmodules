@@ -1,0 +1,3 @@
+[submodule "src/consul"]
+	path = src/consul
+	url = https://github.com/hashicorp/consul.git

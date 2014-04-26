@@ -1,0 +1,33 @@
+networks: (( merge ))
+
+jobs:
+  - name: server
+    templates:
+      - name: consul-agent
+        release: consul
+    instances: 3
+    resource_pool: consul
+    persistent_disk: 1024
+    networks:
+      - name: consul
+        static_ips: (( merge ))
+    properties:
+      network_name: consul
+      consul:
+        agent:
+          mode: server
+          servers: (( networks.consul.static_ips ))
+
+  - name: client
+    templates:
+      - name: consul-agent
+        release: consul
+    instances: 5
+    resource_pool: consul
+    networks:
+      - name: consul
+    properties:
+      network_name: consul
+      consul:
+        agent:
+          servers: (( jobs.server.networks.consul.static_ips ))

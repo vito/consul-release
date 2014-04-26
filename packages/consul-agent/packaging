@@ -1,0 +1,20 @@
+set -e
+
+REPO_NAME=github.com/hashicorp/consul
+
+REPO_DIR=${BOSH_INSTALL_TARGET}/src/${REPO_NAME}
+
+mkdir -p $(dirname $REPO_DIR)
+
+cp -a $(basename $REPO_NAME)/ $REPO_DIR
+
+export GOROOT=$(readlink -nf /var/vcap/packages/golang_1.2)
+export GOPATH=$BOSH_INSTALL_TARGET
+export PATH=$GOROOT/bin:$PATH
+
+cd $REPO_DIR
+
+export PATH=/var/vcap/packages/git/bin:$PATH
+go get -d -v ./...
+
+go install ${REPO_NAME}
