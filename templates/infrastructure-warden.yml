@@ -26,13 +26,13 @@ jobs:
         static_ips: (( static_ips(0, 1, 2) ))
 
   - name: server_z2
-    instances: 1
+    instances: 0
     networks:
       - name: consul
         static_ips: (( static_ips(16, 17, 18) ))
 
   - name: server_z3
-    instances: 1
+    instances: 0
     networks:
       - name: consul
         static_ips: (( static_ips(32, 33, 34) ))

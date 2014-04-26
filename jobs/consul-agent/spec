@@ -2,7 +2,7 @@
 name: consul-agent
 
 templates:
-  agent_ctl.sh: bin/agent_ctl
+  agent_ctl.sh.erb: bin/agent_ctl
   join_ctl.sh.erb: bin/join_ctl
   config.json.erb: config/config.json
 
@@ -32,3 +32,7 @@ properties:
   consul.agent.datacenter:
     description: "Name of the agent's datacenter."
     default: dc1
+
+  consul.agent.services:
+    description: "List of services to configure."
+    default: []

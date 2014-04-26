@@ -85,3 +85,5 @@ jobs:
           servers:
             lan: (( jobs.server_z1.networks.consul.static_ips ))
           datacenter: dc1
+          services:
+            - name: client

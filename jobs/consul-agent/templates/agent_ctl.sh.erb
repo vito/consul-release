@@ -1,4 +1,5 @@
 #!/bin/bash -e
+# vim: set ft=sh
 
 LOG_DIR=/var/vcap/sys/log/consul-agent
 RUN_DIR=/var/vcap/sys/run/consul-agent
@@ -30,8 +31,13 @@ case $1 in
 
     echo $$ > ${RUN_DIR}/consul-agent.pid
 
-    exec chpst -u vcap:vcap $PKG/bin/consul agent \
-      -config-file=$CONF_DIR/config.json \
+    <% p("consul.agent.services").each do |service| %>
+    cat > $CONF_DIR/service-<%= service["name"] %>.json <<EOF
+<%= { "service" => service }.to_json %>
+EOF
+    <% end %>
+
+    exec chpst -u vcap:vcap $PKG/bin/consul agent -config-dir=$CONF_DIR \
       1>>$LOG_DIR/consul-agent.stdout.log \
       2>>$LOG_DIR/consul-agent.stderr.log
 
